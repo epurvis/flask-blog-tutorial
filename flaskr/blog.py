@@ -11,9 +11,9 @@ bp = Blueprint('blog', __name__)
 def index():
     db = get_db()
     posts = db.execute(
-        'select p.id, title, body, created, author_id, username'
-        'from post p join user u on p.author_id = u.id'
-        'order by created desc'
+        'select "post"."id", "title", "body", "created", "author_id"'
+        'from "post" join "user" on "post"."author_id" = "user"."id"'
+        'order by "created" desc'
     ).fetchall()
     return render_template('blog/index.html', posts=posts)
 
@@ -34,7 +34,7 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'insert into post (title, body, author_id)'
+                'insert into "post" ("title", "body", "author_id")'
                 'values (?, ?, ?)',
                 (title, body, g.user['id'])
             )
@@ -46,9 +46,9 @@ def create():
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'select p.id, title, body, created, author_id, username',
-        'from post p join user u on p.author_id = u.id'
-        'where p.id = ?',
+        'select "p"."id", "title", "body", "created", "author_id", "username"'
+        'from "post" "p" join "user" "u" on "p"."author_id" = "u"."id"'
+        'where "p"."id" = ?',
         (id,)
     ).fetchone()
     
@@ -80,8 +80,9 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'update post set title = ?, body = ?'
-                'where id = ?'
+                'update "post" set "title" = ?, "body" = ?'
+                'where "id" = ?',
+                (title, body, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))
@@ -94,5 +95,6 @@ def update(id):
 def delete(id):
     get_post(id)
     db = get_db()
-    db.execute()
+    db.execute('delete from post where id = ?', (id,))
+    db.commit()
     return redirect(url_for('blog.index'))

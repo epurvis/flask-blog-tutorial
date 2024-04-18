@@ -23,7 +23,7 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    "insert into user (username, password) values (?, ?)",
+                    'insert into "user" ("username", "password") values (?, ?)',
                     (username, generate_password_hash(password))
                 )
                 db.commit()
@@ -56,7 +56,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return redirect(url_for('blog.index'))
         
         flash(error)
     
@@ -78,7 +78,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('blog.index'))
 
 
 def login_required(view):
