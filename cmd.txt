@@ -1,0 +1,23 @@
+$ mkdir flaskr
+
+--- Run on flask werkzeug development server ---
+$ flask --app flaskr run --debug
+
+--- Initiate database and build instance folder ---
+$ flask --app flaskr init-db
+
+--- Make application installable to python ---
+$ pip install -e .
+$ pip install build
+
+--- Install / deploy application on other machines ---
+$ python -m build --wheel
+$ pip install flaskr-1.0.0-py3-none-any.whl
+$ flask --app flaskr init-db
+
+--- Easily create a token secret from cmd with python ---
+$ python -c 'import secrets; print(secrets.token_hex())'
+
+--- Launch over a WSGI server as opposed to the dev server ---
+$ pip install waitress
+$ waitress-serve --call 'flaskr:create_app'
